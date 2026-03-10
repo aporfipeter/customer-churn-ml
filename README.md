@@ -16,12 +16,9 @@ The project includes:
 
 1. [Introduction](#introduction)
 2. [Dataset](#dataset)
-3. [Exploratory Data Analysis](#exploratory-data-analysis)
-4. [Data Preprocessing](#data-preprocessing)
-5. [Model Training](#model-training)
-6. [Model Evaluation](#model-evaluation)
-7. [Conclusion](#conclusion)
-8. [Future Work](#future-work)
+3. [Data Cleaning Decisions](#data-cleaning-decisions)
+4. [Current Pipeline](#current-pipeline)
+5. [Next Steps](#next-steps)
 
 ## Introduction
 
