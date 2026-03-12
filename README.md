@@ -18,8 +18,9 @@ The project includes:
 2. [Dataset](#dataset)
 3. [Data Cleaning Decisions](#data-cleaning-decisions)
 4. [Exploratory Data Analysis](#exploratory-data-analysis)
-5. [Current Pipeline](#current-pipeline)
-6. [Next Steps](#next-steps)
+5. [Feature Engineering](#feature-engineering)
+6. [Current Pipeline](#current-pipeline)
+7. [Next Steps](#next-steps)
 
 ## Introduction
 
@@ -79,16 +80,31 @@ Exploratory Data Analysis (EDA)is performed using Jupyter Notebooks.
 
 `eda_telco_churn.pynb` examines the dataset by describing the data (shape, data types, missing values, descriptive statistics). Churn distribution is examined within categories of internet service and contract type. The effect of monthly charges and tenure on churn is also examined.
 
+## Feature Engineering
+
+Feature engineering is performed using `build_features.py`.
+
+- Convert target variable `churn` to binary (0/1)
+- Remove CustomerId to avoid explicit memorization of customers.
+- One-hot encode categorical variables. `drop_first=True` is used to avoid multicollinearity.
+- Train / Test split: test data set size: 20%; Using `stratify=y` to ensure churn distribution is preserved in both sets.
+- Generated input files for model training.
+
+### Input files for model training
+
+- `data/processed/X_train.csv`
+- `data/processed/X_test.csv`
+- `data/processed/y_train.csv`
+- `data/processed/y_test.csv`
+
 ## Current Pipeline
 
 ```
-data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv
+data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv ⭢ EDA ⭢ feature matrix ⭢ train / test split ⭢ model training (NEXT STEP)
 ```
 
 ## Next Steps
 
-- exploratory data analysis
-- feature engineering
 - baseline model training
 - model evaluation
 - prediction API
