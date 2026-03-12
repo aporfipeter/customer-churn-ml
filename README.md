@@ -19,8 +19,9 @@ The project includes:
 3. [Data Cleaning Decisions](#data-cleaning-decisions)
 4. [Exploratory Data Analysis](#exploratory-data-analysis)
 5. [Feature Engineering](#feature-engineering)
-6. [Current Pipeline](#current-pipeline)
-7. [Next Steps](#next-steps)
+6. [Model Training](#model-training)
+7. [Current Pipeline](#current-pipeline)
+8. [Next Steps](#next-steps)
 
 ## Introduction
 
@@ -97,10 +98,53 @@ Feature engineering is performed using `build_features.py`.
 - `data/processed/y_train.csv`
 - `data/processed/y_test.csv`
 
+## Model Training
+
+Model training is performed using `train.py`.
+
+### Method
+
+- Logistic Regression: choosing `max_iter=1000` to ensure convergence.
+- `model.predict` returns class labels (0 or 1)
+- `model.predict_proba` returns probabilities for each class.
+
+### Evaluation Metrics
+
+- Accuracy
+- ROC-AUC
+- Confusion Matrix
+- Classification Report
+
+### Baseline results
+
+Using Logistic Regression with default parameters (probability threshold = 0.5)
+Accuracy: 0.80
+ROC-AUC: 0.84
+
+#### Confusion Matrix
+
+```
+[[1123  177]
+ [ 248  442]]
+```
+
+#### Classification Report
+
+```
+              precision    recall  f1-score   support
+
+           0       0.85      0.89      0.87      1035
+           1       0.66      0.56      0.60       374
+
+    accuracy                           0.80      1409
+   macro avg       0.75      0.73      0.74      1409
+weighted avg       0.80      0.80      0.80      1409
+```
+
 ## Current Pipeline
 
 ```
-data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv ⭢ EDA ⭢ feature matrix ⭢ train / test split ⭢ model training (NEXT STEP)
+data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv ⭢ EDA ⭢ feature matrix ⭢ train / test split ⭢ model training using logistic regression ⭢ evaluation metrics
 ```
 
 ## Next Steps
