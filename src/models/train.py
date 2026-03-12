@@ -40,6 +40,19 @@ def evaluate_model(model, X_test, y_test):
     print(classification_report(y_test, y_pred))
 
 
+def show_feature_importance(model, X_train):
+
+    importance = pd.Series(model.coef_[0], index=X_train.columns)
+
+    importance = importance.sort_values(ascending=False)
+
+    print("\n=== Top 10 Features Increasing Churn Risk ===")
+    print(importance.head(10))
+
+    print("\n=== Top 10 Features Decreasing Churn Risk ===")
+    print(importance.tail(10))
+
+
 def main():
     print("\nLoading train/test datasets...")
     X_train, X_test, y_train, y_test = load_datasets()
@@ -49,6 +62,9 @@ def main():
 
     print("\nEvaluating model...")
     evaluate_model(model, X_test, y_test)
+
+    print("\nFeature Importance")
+    show_feature_importance(model, X_train)
 
 
 if __name__ == "__main__":
