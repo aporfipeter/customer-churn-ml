@@ -17,8 +17,9 @@ The project includes:
 1. [Introduction](#introduction)
 2. [Dataset](#dataset)
 3. [Data Cleaning Decisions](#data-cleaning-decisions)
-4. [Current Pipeline](#current-pipeline)
-5. [Next Steps](#next-steps)
+4. [Exploratory Data Analysis](#exploratory-data-analysis)
+5. [Current Pipeline](#current-pipeline)
+6. [Next Steps](#next-steps)
 
 ## Introduction
 
@@ -71,6 +72,12 @@ Implementation:
 pd.to_numeric(errors="coerce")
 fillna(0)
 ```
+
+## Exploratory Data Analysis
+
+Exploratory Data Analysis (EDA)is performed using Jupyter Notebooks.
+
+`eda_telco_churn.pynb` examines the dataset by describing the data (shape, data types, missing values, descriptive statistics). Churn distribution is examined within categories of internet service and contract type. The effect of monthly charges and tenure on churn is also examined.
 
 ## Current Pipeline
 
