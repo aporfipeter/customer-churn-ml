@@ -1,8 +1,11 @@
 from pathlib import Path
 
 import pandas as pd
+import numpy as np
+
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
+from sklearn.metrics import precision_recall_curve
 
 
 def load_datasets():
@@ -52,6 +55,21 @@ def show_feature_importance(model, X_train):
     print("\n=== Top 10 Features Decreasing Churn Risk ===")
     print(importance.tail(10))
 
+def analyze_thresholds(model, X_test, y_test):
+
+    y_prob = model.predict_proba(X_test)[:, 1]
+
+    precision, recall, thresholds = precision_recall_curve(y_test, y_prob)
+
+    print("\n=== Threshold Analysis (sample points) ===")
+
+    for i in np.linspace(0, len(thresholds)-1, 10, dtype=int):
+        print(
+            f"Threshold: {thresholds[i]:.2f} | "
+            f"Precision: {precision[i]:.2f} | "
+            f"Recall: {recall[i]:.2f}"
+        )
+
 
 def main():
     print("\nLoading train/test datasets...")
@@ -65,6 +83,9 @@ def main():
 
     print("\nFeature Importance")
     show_feature_importance(model, X_train)
+
+    print("\nThreshold Analysis")
+    analyze_thresholds(model, X_test, y_test)
 
 
 if __name__ == "__main__":
