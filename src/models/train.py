@@ -4,8 +4,10 @@ import pandas as pd
 import numpy as np
 
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score
-from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score, precision_recall_curve
+
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 
 
 def load_datasets():
@@ -21,7 +23,11 @@ def load_datasets():
 
 
 def train_model(X_train, y_train):
-    model = LogisticRegression(max_iter=1000, random_state=42)
+    model = Pipeline([
+        ("scaler", StandardScaler()),
+        ("classifier", LogisticRegression(max_iter=2000, random_state=42))
+    ])
+
     model.fit(X_train, y_train)
     return model
 
@@ -44,9 +50,9 @@ def evaluate_model(model, X_test, y_test):
 
 
 def show_feature_importance(model, X_train):
+    classifier = model.named_steps["classifier"]
 
-    importance = pd.Series(model.coef_[0], index=X_train.columns)
-
+    importance = pd.Series(classifier.coef_[0], index=X_train.columns)
     importance = importance.sort_values(ascending=False)
 
     print("\n=== Top 10 Features Increasing Churn Risk ===")

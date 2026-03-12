@@ -141,14 +141,107 @@ ROC-AUC: 0.84
 weighted avg       0.80      0.80      0.80      1409
 ```
 
+#### Feature Importance
+
+```
+=== Top 10 Features Increasing Churn Risk ===
+InternetService_Fiber optic       0.742498
+PaymentMethod_Electronic check    0.380147
+PaperlessBilling_Yes              0.376937
+MultipleLines_Yes                 0.276279
+StreamingTV_Yes                   0.198993
+StreamingMovies_Yes               0.198248
+MultipleLines_No phone service    0.167618
+SeniorCitizen                     0.147555
+PaymentMethod_Mailed check        0.070644
+Partner_Yes                       0.023491
+dtype: float64
+
+=== Top 10 Features Decreasing Churn Risk ===
+TechSupport_No internet service       -0.110744
+StreamingTV_No internet service       -0.110744
+StreamingMovies_No internet service   -0.110744
+OnlineBackup_Yes                      -0.186234
+Dependents_Yes                        -0.223782
+TechSupport_Yes                       -0.388555
+OnlineSecurity_Yes                    -0.436367
+PhoneService_Yes                      -0.438808
+Contract_One year                     -0.677463
+Contract_Two year                     -1.303864
+dtype: float64
+```
+
+Note: `max_iter` limit reached. Scaling and increasing iterations may improve results.
+
+### Results after feature scaling
+
+```
+=== Accuracy ===
+0.8048261178140526
+
+=== ROC-AUC ===
+0.8426903304141156
+```
+
+#### Confusion Matrix
+
+```
+[[926 109]
+ [166 208]]
+```
+
+#### Classification Report
+
+```
+              precision    recall  f1-score   support
+
+           0       0.85      0.89      0.87      1035
+           1       0.66      0.57      0.61       374
+
+    accuracy                           0.81      1409
+   macro avg       0.75      0.73      0.74      1409
+weighted avg       0.80      0.81      0.80      1409
+```
+
+#### Feature Importance
+
+```
+=== Top 10 Features Increasing Churn Risk ===
+InternetService_Fiber optic       0.776154
+TotalCharges                      0.514285
+StreamingMovies_Yes               0.257227
+StreamingTV_Yes                   0.257144
+MultipleLines_Yes                 0.216167
+PaperlessBilling_Yes              0.182034
+PaymentMethod_Electronic check    0.181103
+SeniorCitizen                     0.053073
+DeviceProtection_Yes              0.053048
+PaymentMethod_Mailed check        0.032262
+dtype: float64
+
+=== Top 10 Features Decreasing Churn Risk ===
+StreamingMovies_No internet service   -0.092761
+OnlineSecurity_No internet service    -0.092761
+StreamingTV_No internet service       -0.092761
+TechSupport_Yes                       -0.100502
+Dependents_Yes                        -0.103550
+OnlineSecurity_Yes                    -0.123561
+Contract_One year                     -0.285509
+Contract_Two year                     -0.586859
+MonthlyCharges                        -0.920153
+tenure                                -1.236528
+dtype: float64
+```
+
 ## Current Pipeline
 
 ```
-data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv ⭢ EDA ⭢ feature matrix ⭢ train / test split ⭢ model training using logistic regression ⭢ evaluation metrics
+
+data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv ⭢ EDA ⭢ feature engineering ⭢ train / test split ⭢ scaled pipeline ⭢ model training using logistic regression ⭢ evaluation metrics ⭢ feature interpretation ⭢ threshold analysis
+
 ```
 
 ## Next Steps
 
-- baseline model training
-- model evaluation
+- exploring different models (eg. random forest)
 - prediction API
