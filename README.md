@@ -293,7 +293,7 @@ Potential reasons:
 
 ```
 
-data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv ⭢ EDA ⭢ feature engineering ⭢ train / test split ⭢ scaled pipeline ⭢ model training using logistic regression ⭢ model training using random forest ⭢ model evaluation
+data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv ⭢ EDA ⭢ feature engineering ⭢ train / test split ⭢ scaled pipeline ⭢ model training using logistic regression ⭢ model training using random forest ⭢ model evaluation ⭢ save production model (Logistic Regression)
 
 ```
 

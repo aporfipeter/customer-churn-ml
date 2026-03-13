@@ -1,4 +1,5 @@
 from pathlib import Path
+import joblib
 
 import pandas as pd
 import numpy as np
@@ -99,6 +100,15 @@ def analyze_thresholds(model, X_test, y_test):
             f"Recall: {recall[i]:.2f}"
         )
 
+def save_model(model):
+    project_root = Path(__file__).resolve().parents[2]
+    artifacts_path = project_root / "artifacts"
+    artifacts_path.mkdir(parents=True, exist_ok=True)
+
+    model_path = artifacts_path / "churn_logistic_pipeline.pkl"
+    joblib.dump(model, model_path)
+
+    print(f"\nModel saved to: {model_path}")
 
 def main():
     print("\nLoading train/test datasets...")
@@ -115,6 +125,9 @@ def main():
 
     print("\nThreshold Analysis")
     analyze_thresholds(model, X_test, y_test)
+
+    print("\nSaving Logistic Regression pipeline...")
+    save_model(model)
     
     print("\nTraining Random Forest model...")
     rf_model = train_random_forest(X_train, y_train)
