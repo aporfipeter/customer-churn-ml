@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
 
 
 def load_datasets():
@@ -29,6 +30,19 @@ def train_model(X_train, y_train):
     ])
 
     model.fit(X_train, y_train)
+    return model
+
+def train_random_forest(X_train, y_train):
+
+    model = RandomForestClassifier(
+        n_estimators=300,
+        max_depth=None,
+        random_state=42,
+        n_jobs=-1
+    )
+
+    model.fit(X_train, y_train)
+
     return model
 
 
@@ -61,6 +75,15 @@ def show_feature_importance(model, X_train):
     print("\n=== Top 10 Features Decreasing Churn Risk ===")
     print(importance.tail(10))
 
+def show_feature_importance_rf(model, X_train):
+
+    importance = pd.Series(model.feature_importances_, index=X_train.columns)
+
+    importance = importance.sort_values(ascending=False)
+
+    print("\n=== Random Forest Top Features ===")
+    print(importance.head(10))
+
 def analyze_thresholds(model, X_test, y_test):
 
     y_prob = model.predict_proba(X_test)[:, 1]
@@ -92,6 +115,14 @@ def main():
 
     print("\nThreshold Analysis")
     analyze_thresholds(model, X_test, y_test)
+    
+    print("\nTraining Random Forest model...")
+    rf_model = train_random_forest(X_train, y_train)
+
+    print("\nEvaluating Random Forest...")
+    evaluate_model(rf_model, X_test, y_test)
+
+    show_feature_importance_rf(rf_model, X_train)
 
 
 if __name__ == "__main__":

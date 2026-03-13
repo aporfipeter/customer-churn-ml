@@ -233,11 +233,67 @@ tenure                                -1.236528
 dtype: float64
 ```
 
+### Random Forest results
+
+```
+=== Accuracy ===
+0.7955997161107168
+
+=== ROC-AUC ===
+0.8266746751401483
+```
+
+#### Classification Report
+
+```
+=== Classification Report ===
+              precision    recall  f1-score   support
+
+           0       0.84      0.90      0.87      1035
+           1       0.64      0.51      0.57       374
+
+    accuracy                           0.80      1409
+   macro avg       0.74      0.71      0.72      1409
+weighted avg       0.79      0.80      0.79      1409
+```
+
+#### Confusion Matrix
+
+```
+[[929 106]
+ [182 192]]
+```
+
+#### Feature Importance
+
+```
+TotalCharges                      0.193091
+tenure                            0.168945
+MonthlyCharges                    0.168473
+InternetService_Fiber optic       0.038828
+PaymentMethod_Electronic check    0.038669
+Contract_Two year                 0.031733
+gender_Male                       0.028549
+OnlineSecurity_Yes                0.027506
+PaperlessBilling_Yes              0.025543
+Partner_Yes                       0.023383
+dtype: float64
+```
+
+### Conclusion
+
+The logistic regression model achieved an accuracy of 80% and an ROC-AUC score of 84%. The random forest model achieved an accuracy of 79.6% and an ROC-AUC score of 82.7%. Logistic regression did slightly better.
+Potential reasons:
+
+- Strong linear signals
+- Small feature space, relatively simple structure
+- Random Forest was used with default parameters. Further tuning could probably improve the model.
+
 ## Current Pipeline
 
 ```
 
-data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv ⭢ EDA ⭢ feature engineering ⭢ train / test split ⭢ scaled pipeline ⭢ model training using logistic regression ⭢ evaluation metrics ⭢ feature interpretation ⭢ threshold analysis
+data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv ⭢ EDA ⭢ feature engineering ⭢ train / test split ⭢ scaled pipeline ⭢ model training using logistic regression ⭢ model training using random forest ⭢ model evaluation
 
 ```
 
