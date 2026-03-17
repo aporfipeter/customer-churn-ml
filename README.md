@@ -98,6 +98,15 @@ Feature engineering is performed using `build_features.py`.
 - `data/processed/y_train.csv`
 - `data/processed/y_test.csv`
 
+### Refactor for API
+
+Moving feature engineering logic into model pipeline to be able to accept raw data from API instead of expecting preprocessed data. Using
+
+- `ColumnTransformer` to handle numeric and categorical features.
+- `OneHotEncoder` to encode categorical features.
+- `StandardScaler` to scale numeric features.
+- `train_test_split` used on raw data instead of using pre-encoded CSVs.
+
 ## Model Training
 
 Model training is performed using `train.py`.

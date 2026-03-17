@@ -1,32 +1,58 @@
 from pathlib import Path
 import joblib
-
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, roc_auc_score, precision_recall_curve
-
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler
+from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    precision_recall_curve,
+    roc_auc_score,
+)
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.model_selection import train_test_split
 
 
-def load_datasets():
+def load_processed_data() -> pd.DataFrame:
     project_root = Path(__file__).resolve().parents[2]
-    processed_path = project_root / "data" / "processed"
+    data_path = project_root / "data" / "processed" / "telco_churn_clean.csv"
 
-    X_train = pd.read_csv(processed_path / "X_train.csv")
-    X_test = pd.read_csv(processed_path / "X_test.csv")
-    y_train = pd.read_csv(processed_path / "y_train.csv").squeeze("columns")
-    y_test = pd.read_csv(processed_path / "y_test.csv").squeeze("columns")
+    df = pd.read_csv(data_path)
+    return df
+
+def prepare_train_test_data(df: pd.DataFrame):
+    y = df["Churn"].map({"Yes": 1, "No": 0})
+    X = df.drop(columns=["Churn", "customerID"])
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y,
+    )
 
     return X_train, X_test, y_train, y_test
 
 
 def train_model(X_train, y_train):
+    categorical_columns = X_train.select_dtypes(include=["object", "category", "string"]).columns.tolist()
+    numeric_columns = X_train.select_dtypes(include=["int64", "float64"]).columns.tolist()
+
+    preprocessor = ColumnTransformer(
+        transformers=[
+            ("num", StandardScaler(), numeric_columns),
+            ("cat", OneHotEncoder(drop="first", handle_unknown="ignore"), categorical_columns),
+        ]
+    )
+
     model = Pipeline([
-        ("scaler", StandardScaler()),
+        ("preprocessor", preprocessor),
         ("classifier", LogisticRegression(max_iter=2000, random_state=42))
     ])
 
@@ -66,8 +92,10 @@ def evaluate_model(model, X_test, y_test):
 
 def show_feature_importance(model, X_train):
     classifier = model.named_steps["classifier"]
+    preprocessor = model.named_steps["preprocessor"]
 
-    importance = pd.Series(classifier.coef_[0], index=X_train.columns)
+    feature_names = preprocessor.get_feature_names_out()
+    importance = pd.Series(classifier.coef_[0], index=feature_names)
     importance = importance.sort_values(ascending=False)
 
     print("\n=== Top 10 Features Increasing Churn Risk ===")
@@ -111,31 +139,37 @@ def save_model(model):
     print(f"\nModel saved to: {model_path}")
 
 def main():
-    print("\nLoading train/test datasets...")
-    X_train, X_test, y_train, y_test = load_datasets()
+    print("\nLoading processed dataset...")
+    df = load_processed_data()
 
-    print("\nTraining Logistic Regression model...")
+    print("\nPreparing raw train/test split...")
+    X_train, X_test, y_train, y_test = prepare_train_test_data(df)
+
+    print("\nTraining Logistic Regression pipeline on raw inputs...")
     model = train_model(X_train, y_train)
 
     print("\nEvaluating model...")
     evaluate_model(model, X_test, y_test)
 
-    print("\nFeature Importance")
     show_feature_importance(model, X_train)
 
-    print("\nThreshold Analysis")
     analyze_thresholds(model, X_test, y_test)
 
     print("\nSaving Logistic Regression pipeline...")
     save_model(model)
     
+    """
     print("\nTraining Random Forest model...")
-    rf_model = train_random_forest(X_train, y_train)
+    rf_model = train_random_forest(
+        pd.get_dummies(X_train, drop_first=True),
+        y_train
+    )
 
     print("\nEvaluating Random Forest...")
-    evaluate_model(rf_model, X_test, y_test)
+    evaluate_model(rf_model, pd.get_dummies(X_test, drop_first=True), y_test)
 
-    show_feature_importance_rf(rf_model, X_train)
+    show_rf_importance(rf_model, pd.get_dummies(X_train, drop_first=True))
+    """
 
 
 if __name__ == "__main__":
