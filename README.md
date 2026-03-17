@@ -302,11 +302,89 @@ Potential reasons:
 
 ```
 
-data/raw ⭢ load_data.py (inspection) ⭢ preprocess.py ⭢ data/processed/telco_churn_clean.csv ⭢ EDA ⭢ feature engineering ⭢ train / test split ⭢ scaled pipeline ⭢ model training using logistic regression ⭢ model training using random forest ⭢ model evaluation ⭢ save production model (Logistic Regression)
+raw dataset
+↓
+inspection
+↓
+cleaning
+↓
+EDA
+↓
+train/test split
+↓
+preprocessing pipeline
+  - one-hot encoding
+  - scaling
+↓
+logistic regression model
+↓
+evaluation
+↓
+saved model artifact
+↓
+FastAPI prediction service
 
 ```
 
-## Next Steps
+## API
 
-- exploring different models (eg. random forest)
-- prediction API
+```
+uvicorn src.api.main:app --reload
+```
+
+### Endpoints
+
+- `GET /` - Status message.
+- `GET /health` - Health check.
+- `POST /predict` - Predict churn.
+
+### Docs
+
+```
+http://127.0.0.1:8000/docs
+```
+
+### Example Request for /predict
+
+```json
+{
+    "gender": "Female",
+    "SeniorCitizen": 0,
+    "Partner": "Yes",
+    "Dependents": "No",
+    "tenure": 5,
+    "PhoneService": "Yes",
+    "MultipleLines": "No",
+    "InternetService": "Fiber optic",
+    "OnlineSecurity": "No",
+    "OnlineBackup": "Yes",
+    "DeviceProtection": "No",
+    "TechSupport": "No",
+    "StreamingTV": "Yes",
+    "StreamingMovies": "Yes",
+    "Contract": "Month-to-month",
+    "PaperlessBilling": "Yes",
+    "PaymentMethod": "Electronic check",
+    "MonthlyCharges": 79.9,
+    "TotalCharges": 399.5
+}
+```
+
+### Example Response for /predict
+
+```json
+{
+    "churn_probability": 0.87,
+    "prediction": 1,
+    "prediction_label": "churn"
+}
+```
+
+## Key Lessons Learned
+
+- Business data often contains hidden type issues
+- EDA helps identify strong predictors before modeling
+- Logistic Regression is a strong baseline for tabular classification
+- Tree models do not always outperform linear models
+- Full preprocessing pipelines are essential for reliable deployment
+- APIs should accept business-facing raw inputs, not model-internal encoded vectors
